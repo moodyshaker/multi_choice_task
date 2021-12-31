@@ -15,8 +15,8 @@ class MainProvider with ChangeNotifier {
   String _message;
   List<String> _roles;
   Preferences _preferences;
-  List<DateSet> _dataSet;
-  bool _dataSetIsEmpty;
+  List<DateSet> _dataSet = [];
+  bool _dataSetIsEmpty = false;
   int _total;
 
   List<String> get roles => _roles;
@@ -86,6 +86,7 @@ class MainProvider with ChangeNotifier {
         "email": email,
         "password": password,
       });
+      print(r.data);
       if (r.data['responseMessage'] != 'invalid Email or password') {
         await _preferences.setAccessToken(r.data['dateSet']['token']);
         _authState = NetworkState.success;
@@ -110,15 +111,16 @@ class MainProvider with ChangeNotifier {
   Future<void> getHalaPayment() async {
     try {
       _state = NetworkState.waiting;
+      _dataSet = [];
       Response r = await dio.get('$baseUrl/api/Reports/HalaPayments',
           options: Options(headers: {
             'authorization': 'Bearer ${_preferences.getAccessToken}',
           }));
       if (r.statusCode >= 200 && r.statusCode < 300) {
-        _state = NetworkState.success;
         Payment payment = Payment.fromJson(r.data);
         _dataSet = payment.dateSet;
         _dataSetIsEmpty = dataSet.isEmpty;
+        _state = NetworkState.success;
       } else {
         _state = NetworkState.error;
       }
@@ -132,6 +134,7 @@ class MainProvider with ChangeNotifier {
 
   Future<void> getPayment() async {
     _total = 0;
+    _dataSet = [];
     try {
       _state = NetworkState.waiting;
       Response r = await dio.get('$baseUrl/api/Payment/GetPayment',
@@ -142,7 +145,9 @@ class MainProvider with ChangeNotifier {
         print(r.data);
         Payment payment = Payment.fromJson(r.data);
         _dataSet = payment.dateSet;
-        _dataSet.forEach((t) => _total += t.amount.toInt());
+        for (var t in _dataSet) {
+          _total += t.amount.toInt();
+        }
         _dataSetIsEmpty = dataSet.isEmpty;
         _state = NetworkState.success;
       } else {

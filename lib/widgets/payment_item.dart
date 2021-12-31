@@ -15,7 +15,6 @@ class _PaymentItemState extends State<PaymentItem> {
 
   @override
   Widget build(BuildContext context) {
-
     return GestureDetector(
       onTap: () {
         setState(() {
@@ -26,11 +25,11 @@ class _PaymentItemState extends State<PaymentItem> {
         shape: RoundedRectangleBorder(
           borderRadius: BorderRadius.circular(12.0),
         ),
-        child: Padding(
-          padding: const EdgeInsets.all(20.0),
-          child: Column(
-            children: [
-              Row(
+        child: Column(
+          children: [
+            Padding(
+              padding: const EdgeInsets.all(20.0),
+              child: Row(
                 mainAxisAlignment: MainAxisAlignment.spaceBetween,
                 children: [
                   Column(
@@ -68,20 +67,67 @@ class _PaymentItemState extends State<PaymentItem> {
                   ),
                 ],
               ),
-              Row(
-                children: [
-                  Text(''),
-                  Text(''),
-                ],
-              ),
-              Row(
-                children: [
-                  Text('رقم التحويل: '),
-                  Text(widget.data.trxDetails.appliedCharge),
-                ],
-              ),
-            ],
-          ),
+            ),
+            _isExpanded
+                ? Container(
+                    decoration: BoxDecoration(
+                        color: Colors.grey[50],
+                        borderRadius: const BorderRadius.only(
+                          bottomRight: Radius.circular(12.0),
+                          bottomLeft: Radius.circular(12.0),
+                        )),
+                    padding: const EdgeInsets.all(20.0),
+                    child: Column(
+                      children: [
+                        Row(
+                          children: [
+                            const Text(
+                              'رقم التحويل:  ',
+                              style: TextStyle(
+                                  fontSize: 15.0, color: Colors.grey),
+                            ),
+                            Text(
+                              widget.data.trxRef,
+                              style: const TextStyle(fontSize: 15.0),
+                            ),
+                          ],
+                        ),
+                        const SizedBox(
+                          height: 4.0,
+                        ),
+                        Row(
+                          children: [
+                            const Text(
+                              'تاريخ التحويل:  ',
+                              style: TextStyle(
+                                  fontSize: 15.0, color: Colors.grey),
+                            ),
+                            Text(
+                              widget.data.trxDate,
+                              style: const TextStyle(fontSize: 15.0),
+                            ),
+                          ],
+                        ),
+                        const SizedBox(
+                          height: 4.0,
+                        ),
+                        Row(
+                          children: [
+                            const Text('أسم المنشأة:  ',
+                                style: TextStyle(
+                                  fontSize: 15.0,
+                                  color: Colors.grey,
+                                )),
+                            Text(widget.data.corporateFullNameAR,
+                                style: const TextStyle(
+                                    fontSize: 15.0, color: Colors.purple)),
+                          ],
+                        ),
+                      ],
+                    ),
+                  )
+                : const SizedBox()
+          ],
         ),
       ),
     );
