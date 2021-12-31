@@ -1,3 +1,4 @@
+import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 
 class ActionDialog extends StatelessWidget {
@@ -25,87 +26,90 @@ class ActionDialog extends StatelessWidget {
       onWillPop: () async {
         return false;
       },
-      child: Dialog(
-        shape: shape ??
-            RoundedRectangleBorder(
-              borderRadius: BorderRadius.circular(20.0),
-            ),
-        child: Padding(
-          padding: const EdgeInsets.all(20.0),
-          child: Column(
-            crossAxisAlignment: CrossAxisAlignment.stretch,
-            mainAxisSize: MainAxisSize.min,
-            children: [
-              title != null
-                  ? Text(
-                      title,
-                      style: const TextStyle(
-                        fontSize: 20.0,
-                        fontWeight: FontWeight.w700,
-                      ),
-                      textAlign: TextAlign.start,
-                    )
-                  : Container(),
-              title != null
-                  ? const SizedBox(
-                      height: 10.0,
-                    )
-                  : Container(),
-              content != null
-                  ? Text(
-                      content,
-                      style: const TextStyle(
-                        fontSize: 16.0,
-                        fontWeight: FontWeight.w600,
-                      ),
-                      textAlign: TextAlign.center,
-                    )
-                  : Container(),
-              content != null
-                  ? const SizedBox(
-                      height: 10.0,
-                    )
-                  : Container(),
-              Row(mainAxisAlignment: MainAxisAlignment.center, children: [
-                onApproveClick != null || approveAction != null
-                    ? ElevatedButton(
-                        style: ButtonStyle(
-                            backgroundColor: MaterialStateProperty.all<Color>(
-                                Theme.of(context).primaryColor)),
-                        onPressed: onApproveClick,
-                        child: Text(
-                          approveAction ?? '',
-                          style: const TextStyle(
-                            color: Colors.white,
-                            fontWeight: FontWeight.w600,
-                            fontSize: 14.0,
-                          ),
+      child: Directionality(
+        textDirection: TextDirection.rtl,
+        child: Dialog(
+          shape: shape ??
+              RoundedRectangleBorder(
+                borderRadius: BorderRadius.circular(20.0),
+              ),
+          child: Padding(
+            padding: const EdgeInsets.all(20.0),
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.stretch,
+              mainAxisSize: MainAxisSize.min,
+              children: [
+                title != null
+                    ? Text(
+                        title,
+                        style: const TextStyle(
+                          fontSize: 20.0,
+                          fontWeight: FontWeight.w700,
                         ),
+                        textAlign: TextAlign.start,
                       )
                     : Container(),
-                ((onApproveClick != null || approveAction != null) &&
-                        (onCancelClick != null || cancelAction != null))
+                title != null
                     ? const SizedBox(
-                        width: 10.0,
+                        height: 10.0,
                       )
                     : Container(),
-                onCancelClick != null || cancelAction != null
-                    ? ElevatedButton(
-                        onPressed: onCancelClick,
-                        style: ButtonStyle(
-                            backgroundColor: MaterialStateProperty.all<Color>(
-                                Theme.of(context).primaryColor)),
-                        child: Text(
-                          cancelAction ?? '',
-                          style: const TextStyle(
+                content != null
+                    ? Text(
+                        content,
+                        style: const TextStyle(
+                          fontSize: 16.0,
+                          fontWeight: FontWeight.w600,
+                        ),
+                        textAlign: TextAlign.center,
+                      )
+                    : Container(),
+                content != null
+                    ? const SizedBox(
+                        height: 10.0,
+                      )
+                    : Container(),
+                Row(mainAxisAlignment: MainAxisAlignment.center, children: [
+                  onApproveClick != null || approveAction != null
+                      ? ElevatedButton(
+                          style: ButtonStyle(
+                              backgroundColor: MaterialStateProperty.all<Color>(
+                                  Theme.of(context).primaryColor)),
+                          onPressed: onApproveClick,
+                          child: Text(
+                            approveAction ?? '',
+                            style: const TextStyle(
                               color: Colors.white,
                               fontWeight: FontWeight.w600,
-                              fontSize: 14.0),
-                        ),
-                      )
-                    : Container()
-              ]),
-            ],
+                              fontSize: 14.0,
+                            ),
+                          ),
+                        )
+                      : Container(),
+                  ((onApproveClick != null || approveAction != null) &&
+                          (onCancelClick != null || cancelAction != null))
+                      ? const SizedBox(
+                          width: 10.0,
+                        )
+                      : Container(),
+                  onCancelClick != null || cancelAction != null
+                      ? ElevatedButton(
+                          onPressed: onCancelClick,
+                          style: ButtonStyle(
+                              backgroundColor: MaterialStateProperty.all<Color>(
+                                  Theme.of(context).primaryColor)),
+                          child: Text(
+                            cancelAction ?? '',
+                            style: const TextStyle(
+                                color: Colors.white,
+                                fontWeight: FontWeight.w600,
+                                fontSize: 14.0),
+                          ),
+                        )
+                      : Container()
+                ]),
+              ],
+            ),
           ),
         ),
       ),

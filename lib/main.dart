@@ -16,9 +16,7 @@ class MyApp extends StatelessWidget {
       create: (_) => MainProvider(),
       child: MaterialApp(
         title: 'MultiChoiceTask',
-        theme: ThemeData(
-          primarySwatch: Colors.blue,
-        ),
+        theme: ThemeData(primarySwatch: Colors.purple),
         initialRoute: Splash.id,
         debugShowCheckedModeBanner: false,
         routes: {

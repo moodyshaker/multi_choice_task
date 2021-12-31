@@ -2,6 +2,8 @@ import 'dart:convert';
 import 'package:dio/dio.dart';
 import 'package:flutter/material.dart';
 import 'package:multi_choice_task/dialog/action_dialog.dart';
+import 'package:multi_choice_task/models/dataset.dart';
+import 'package:multi_choice_task/models/payment.dart';
 import 'package:multi_choice_task/storage/shared_preference.dart';
 import 'package:multi_choice_task/utilits/const.dart';
 import 'package:multi_choice_task/utilits/network_state_enum.dart';
@@ -13,8 +15,15 @@ class MainProvider with ChangeNotifier {
   String _message;
   List<String> _roles;
   Preferences _preferences;
+  List<DateSet> _dataSet;
+  bool _dataSetIsEmpty;
+  int _total;
 
   List<String> get roles => _roles;
+
+  bool get dataSetIsEmpty => _dataSetIsEmpty;
+
+  List<DateSet> get dataSet => _dataSet;
 
   NetworkState get state => _state;
 
@@ -26,6 +35,8 @@ class MainProvider with ChangeNotifier {
   }
 
   String get token => _preferences.getAccessToken;
+
+  Future<void> logout() async => await _preferences.clearUser();
 
   Future<void> createNewUser({
     @required String fullName,
@@ -105,8 +116,9 @@ class MainProvider with ChangeNotifier {
           }));
       if (r.statusCode >= 200 && r.statusCode < 300) {
         _state = NetworkState.success;
-        print(r.data);
-        print(r.data['dateSet']);
+        Payment payment = Payment.fromJson(r.data);
+        _dataSet = payment.dateSet;
+        _dataSetIsEmpty = dataSet.isEmpty;
       } else {
         _state = NetworkState.error;
       }
@@ -116,25 +128,25 @@ class MainProvider with ChangeNotifier {
     notifyListeners();
   }
 
+  int get total => _total;
+
   Future<void> getPayment() async {
+    _total = 0;
     try {
       _state = NetworkState.waiting;
       Response r = await dio.get('$baseUrl/api/Payment/GetPayment',
-          queryParameters: {'MobileNumber': '100200300', 'FromDate': '20-09-2021'},
           options: Options(headers: {
             'authorization': 'Bearer ${_preferences.getAccessToken}',
           }));
       if (r.statusCode >= 200 && r.statusCode < 300) {
-        _state = NetworkState.success;
         print(r.data);
-        print(r.data['dateSet']);
+        Payment payment = Payment.fromJson(r.data);
+        _dataSet = payment.dateSet;
+        _dataSet.forEach((t) => _total += t.amount.toInt());
+        _dataSetIsEmpty = dataSet.isEmpty;
+        _state = NetworkState.success;
       } else {
-        print(r.data['dateSet']);
-        _state = NetworkState.success;
-        if (_message != null) {
-          print(json.decode(r.data)['dateSet']);
-        } else {}
-        print(r.data);
+        _state = NetworkState.error;
       }
     } catch (e) {
       print(e.toString());

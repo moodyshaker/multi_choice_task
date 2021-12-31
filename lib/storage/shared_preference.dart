@@ -26,6 +26,8 @@ class Preferences {
     return isCleared;
   }
 
+
+
   String get getUserId => _preferences.getString(id) ?? '';
 
 
