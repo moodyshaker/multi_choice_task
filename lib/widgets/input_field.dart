@@ -59,7 +59,7 @@ class _InputFieldState extends State<InputField> {
         labelText: widget.labelText,
         border: widget.isRadiusBorder
             ? OutlineInputBorder(
-                borderRadius: BorderRadius.circular(25.0),
+                borderRadius: BorderRadius.circular(12.0),
               )
             : null,
         suffixIcon: widget.isPassword

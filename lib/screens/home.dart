@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:multi_choice_task/dialog/action_dialog.dart';
+import 'package:multi_choice_task/dialog/date_time_dialog.dart';
 import 'package:multi_choice_task/provider/main_provider.dart';
 import 'package:multi_choice_task/screens/auth.dart';
 import 'package:multi_choice_task/utilits/network_state_enum.dart';
@@ -21,8 +22,6 @@ class _HomeState extends State<Home> {
   void initState() {
     super.initState();
     _mainProvider = Provider.of<MainProvider>(context, listen: false);
-    // _mainProvider.getHalaPayment();
-    print(_mainProvider.token);
     _mainProvider.getPayment();
   }
 
@@ -32,19 +31,20 @@ class _HomeState extends State<Home> {
       onWillPop: () async {
         showDialog(
           context: context,
-          builder: (context) => ActionDialog(
-            title: 'الخروج من التطبيق',
-            content: 'هل تود الخروج من التطبيق',
-            approveAction: 'نعم',
-            cancelAction: 'لا',
-            onApproveClick: () {
-              Navigator.pop(context);
-              SystemNavigator.pop();
-            },
-            onCancelClick: () {
-              Navigator.pop(context);
-            },
-          ),
+          builder: (context) =>
+              ActionDialog(
+                title: 'الخروج من التطبيق',
+                content: 'هل تود الخروج من التطبيق',
+                approveAction: 'نعم',
+                cancelAction: 'لا',
+                onApproveClick: () {
+                  Navigator.pop(context);
+                  SystemNavigator.pop();
+                },
+                onCancelClick: () {
+                  Navigator.pop(context);
+                },
+              ),
         );
         return false;
       },
@@ -103,91 +103,100 @@ class _HomeState extends State<Home> {
             ],
           ),
           body: Consumer<MainProvider>(
-            builder: (c, data, ch) => data.state == NetworkState.waiting
+            builder: (c, data, ch) =>
+            data.state == NetworkState.waiting
                 ? const Center(
-                    child: CircularProgressIndicator(),
-                  )
+              child: CircularProgressIndicator(),
+            )
                 : data.dataSetIsEmpty
-                    ? Center(
-                        child: Text('لا توجد مدفوعات'),
-                      )
-                    : Column(
-                        children: [
-                          Row(
+                ? const Center(
+              child: Text('لا توجد مدفوعات'),
+            )
+                : Column(
+              children: [
+                Row(
+                  children: [
+                    Expanded(
+                      flex: 4,
+                      child: Card(
+                        color: Colors.yellow,
+                        child: Padding(
+                          padding: const EdgeInsets.symmetric(
+                              vertical: 12.0, horizontal: 10.0),
+                          child: Row(
+                            mainAxisAlignment:
+                            MainAxisAlignment.spaceBetween,
                             children: [
-                              Expanded(
-                                flex: 4,
-                                child: Card(
-                                  color: Colors.yellow,
-                                  child: Padding(
-                                    padding: const EdgeInsets.symmetric(
-                                        vertical: 12.0, horizontal: 10.0),
-                                    child: Row(
-                                      mainAxisAlignment:
-                                          MainAxisAlignment.spaceBetween,
-                                      children: [
-                                        const Text(
-                                          'إجمالي المدفوعات',
-                                          style: TextStyle(
-                                              fontSize: 18.0,
-                                              color: Colors.green),
-                                        ),
-                                        Row(
-                                          children: [
-                                            Text(
-                                              '${data.total}',
-                                              style: const TextStyle(
-                                                fontSize: 18.0,
-                                                color: Colors.green,
-                                              ),
-                                            ),
-                                            const SizedBox(
-                                              width: 2.0,
-                                            ),
-                                            const Text(
-                                              'ريال سعودي',
-                                              style: TextStyle(
-                                                fontSize: 14.0,
-                                                color: Colors.green,
-                                              ),
-                                            ),
-                                          ],
-                                        ),
-                                      ],
-                                    ),
-                                  ),
-                                ),
+                              const Text(
+                                'إجمالي المدفوعات',
+                                style: TextStyle(
+                                    fontSize: 18.0,
+                                    color: Colors.green),
                               ),
-                              Expanded(
-                                flex: 1,
-                                child: GestureDetector(
-                                  onTap: () {
-                                    // show filter dialog;
-                                  },
-                                  child: const Card(
-                                    child: Padding(
-                                      padding: EdgeInsets.symmetric(
-                                          vertical: 16.0, horizontal: 24.0),
-                                      child: Icon(
-                                        Icons.filter_list_alt,
-                                        color: Colors.purple,
-                                      ),
+                              Row(
+                                children: [
+                                  Text(
+                                    '${data.total}',
+                                    style: const TextStyle(
+                                      fontSize: 18.0,
+                                      color: Colors.green,
                                     ),
                                   ),
-                                ),
+                                  const SizedBox(
+                                    width: 2.0,
+                                  ),
+                                  const Text(
+                                    'ريال سعودي',
+                                    style: TextStyle(
+                                      fontSize: 14.0,
+                                      color: Colors.green,
+                                    ),
+                                  ),
+                                ],
                               ),
                             ],
                           ),
-                          Expanded(
-                            child: ListView.builder(
-                                itemCount: data.dataSet.length,
-                                itemBuilder: (BuildContext c, int i) =>
-                                    PaymentItem(
-                                      data: data.dataSet[i],
-                                    )),
-                          ),
-                        ],
+                        ),
                       ),
+                    ),
+                    Expanded(
+                      flex: 1,
+                      child: GestureDetector(
+                        onTap: () {
+                          showDialog(
+                              context: context,
+                              barrierDismissible: false,
+                              builder: (context) =>
+                                  DateTimeDialog(
+                                    onSearchCallback: (String dateFrom, String dateTo,){
+                                      // print(dateFrom);
+                                      // print(dateTo);
+                                    },));
+                        },
+                        child: const Card(
+                          child: Padding(
+                            padding: EdgeInsets.symmetric(
+                                vertical: 16.0, horizontal: 24.0),
+                            child: Icon(
+                              Icons.filter_list_alt,
+                              color: Colors.purple,
+                            ),
+                          ),
+                        ),
+                      ),
+                    ),
+                  ],
+                ),
+                Expanded(
+                  child: ListView.builder(
+                      itemCount: data.dataSet.length,
+                      itemBuilder: (BuildContext c, int i) =>
+                          PaymentItem(
+                            data: data.dataSet[i],
+                          )),
+                ),
+              ],
+            ),
           ),
         ),
       ),

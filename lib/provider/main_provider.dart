@@ -86,7 +86,6 @@ class MainProvider with ChangeNotifier {
         "email": email,
         "password": password,
       });
-      print(r.data);
       if (r.data['responseMessage'] != 'invalid Email or password') {
         await _preferences.setAccessToken(r.data['dateSet']['token']);
         _authState = NetworkState.success;
@@ -103,7 +102,6 @@ class MainProvider with ChangeNotifier {
                 ));
       }
     } catch (e) {
-      print(e.toString());
     }
     notifyListeners();
   }
@@ -125,7 +123,6 @@ class MainProvider with ChangeNotifier {
         _state = NetworkState.error;
       }
     } catch (e) {
-      print(e.toString());
     }
     notifyListeners();
   }
@@ -142,7 +139,6 @@ class MainProvider with ChangeNotifier {
             'authorization': 'Bearer ${_preferences.getAccessToken}',
           }));
       if (r.statusCode >= 200 && r.statusCode < 300) {
-        print(r.data);
         Payment payment = Payment.fromJson(r.data);
         _dataSet = payment.dateSet;
         for (var t in _dataSet) {
@@ -154,7 +150,6 @@ class MainProvider with ChangeNotifier {
         _state = NetworkState.error;
       }
     } catch (e) {
-      print(e.toString());
     }
     notifyListeners();
   }
@@ -167,14 +162,11 @@ class MainProvider with ChangeNotifier {
       );
       if (r.statusCode >= 200 && r.statusCode < 300) {
         _state = NetworkState.success;
-        print(r.data);
-        print(r.data['dateSet']);
         _roles = (r.data['dateSet'] as List).map<String>((e) => e).toList();
       } else {
         _state = NetworkState.error;
       }
     } catch (e) {
-      print(e.toString());
     }
     notifyListeners();
   }
