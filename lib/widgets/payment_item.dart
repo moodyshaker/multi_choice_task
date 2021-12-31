@@ -1,15 +1,27 @@
 import 'package:flutter/material.dart';
 import 'package:multi_choice_task/models/dataset.dart';
 
-class PaymentItem extends StatelessWidget {
+class PaymentItem extends StatefulWidget {
   final DateSet data;
 
   const PaymentItem({@required this.data});
 
   @override
-  Widget build(BuildContext context) {
-    return GestureDetector(
+  State<PaymentItem> createState() => _PaymentItemState();
+}
 
+class _PaymentItemState extends State<PaymentItem> {
+  bool _isExpanded = false;
+
+  @override
+  Widget build(BuildContext context) {
+
+    return GestureDetector(
+      onTap: () {
+        setState(() {
+          _isExpanded = !_isExpanded;
+        });
+      },
       child: Card(
         shape: RoundedRectangleBorder(
           borderRadius: BorderRadius.circular(12.0),
@@ -25,7 +37,7 @@ class PaymentItem extends StatelessWidget {
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
                       Text(
-                        data.fullNameAR,
+                        widget.data.fullNameAR,
                         style: const TextStyle(
                           color: Colors.purple,
                           fontSize: 18.0,
@@ -33,7 +45,7 @@ class PaymentItem extends StatelessWidget {
                         ),
                       ),
                       Text(
-                        data.mobileNumber,
+                        widget.data.mobileNumber,
                         style: const TextStyle(
                           fontSize: 15.0,
                           fontWeight: FontWeight.w600,
@@ -44,7 +56,7 @@ class PaymentItem extends StatelessWidget {
                   Column(
                     children: [
                       Text(
-                        '${data.amount}',
+                        '${widget.data.amount}',
                         style: const TextStyle(
                           fontSize: 20.0,
                           color: Colors.red,
@@ -56,7 +68,18 @@ class PaymentItem extends StatelessWidget {
                   ),
                 ],
               ),
-
+              Row(
+                children: [
+                  Text(''),
+                  Text(''),
+                ],
+              ),
+              Row(
+                children: [
+                  Text('رقم التحويل: '),
+                  Text(widget.data.trxDetails.appliedCharge),
+                ],
+              ),
             ],
           ),
         ),

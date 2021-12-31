@@ -27,7 +27,7 @@ class _HomeState extends State<Home> {
 
   @override
   Widget build(BuildContext context) {
-    final size = MediaQuery.of(context).size;
+    print(_mainProvider.token);
     return WillPopScope(
       onWillPop: () async {
         showDialog(
@@ -153,15 +153,20 @@ class _HomeState extends State<Home> {
                               ),
                             ),
                           ),
-                          const Expanded(
+                          Expanded(
                             flex: 1,
-                            child: Card(
-                              child: Padding(
-                                padding: EdgeInsets.symmetric(
-                                    vertical: 16.0, horizontal: 24.0),
-                                child: Icon(
-                                  Icons.filter_list_alt,
-                                  color: Colors.purple,
+                            child: GestureDetector(
+                              onTap: () {
+                                // show filter dialog;
+                              },
+                              child: const Card(
+                                child: Padding(
+                                  padding: EdgeInsets.symmetric(
+                                      vertical: 16.0, horizontal: 24.0),
+                                  child: Icon(
+                                    Icons.filter_list_alt,
+                                    color: Colors.purple,
+                                  ),
                                 ),
                               ),
                             ),
